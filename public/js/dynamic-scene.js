@@ -1,7 +1,28 @@
-$( document ).ready(function() {
+$( document ).ready(async function() {
     console.log( "ready!" );
 
-    var defaultAssetMap = [
+    var queries = {};
+    $.each(document.location.search.substr(1).split('&'),function(c,q){
+        var i = q.split('=');
+        queries[i[0].toString()] = i[1].toString();
+    });
+    console.log(queries);
+
+    var scene_uuid = queries.scene_uuid;
+
+    var defaultContents = (await $.ajax({url: "defaultcontents", success: function(result){}}).promise()).defaultContents;
+    console.log(defaultContents);
+
+    var environmentContents = (await $.ajax({url: "environmentContents?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).environmentContents;
+    console.log(environmentContents);
+
+    var sceneContents = (await $.ajax({url: "sceneContents?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).sceneContents;
+    console.log(sceneContents);
+
+    var assets = (await $.ajax({url: "assets?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).assets;
+    console.log(assets);
+
+    /*var templates = [
         {
             "type": "scene_background",
             "template": "sechelt",
@@ -9,9 +30,9 @@ $( document ).ready(function() {
             "material_content_src": "https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg",
             "material_content_key" : "#skyTexture"
         }
-    ]
+    ]*/
 
-    var assets = [
+    /*var assets = [
         {
             "id": "ambient_music",
             "type": "audio",
@@ -66,9 +87,9 @@ $( document ).ready(function() {
             "src": "img/katty3.jpg",
             "crossOrigin": ""
         }
-    ]
+    ]*/
 
-    var environmentContents = [
+    /*var environmentContents = [
         {
             "type": "scene_background",
             "template": "sechelt",
@@ -83,9 +104,9 @@ $( document ).ready(function() {
             //"material_content_src": "https://cdn.aframe.io/a-painter/images/floor.jpg",
             "material_content_key" : "#groundTexture"
         }
-    ]
+    ] */
 
-    var sceneContents = [
+    /*var sceneContents = [
 
         {
             "type": "headline",
@@ -149,9 +170,9 @@ $( document ).ready(function() {
             "rotation": "",
             "scale": "1.5 1.5 1.5" 
         }
-    ]
+    ]*/
 
-var defaultContents = [
+/*var defaultContents = [
     {
         "type": "cursor",
         "template": "default",
@@ -165,7 +186,7 @@ var defaultContents = [
         "type": "rightHandControl",
         "template": "default"
     }
-    /*{
+    {
         "type": "musicbutton",
         "template": "default",
         "id": "music-button",
@@ -175,8 +196,8 @@ var defaultContents = [
         "position": "0 6 -2",
         "rotation": "",
         "scale": "1 1 1"         
-    } */
-]
+    } 
+]*/
 
     //Create empty scene
     $("body").
@@ -294,6 +315,14 @@ var defaultContents = [
         console.log("scene clicked");
         var entity = document.querySelector('[sound]');
         entity.components.sound.playSound();
+        //entity.components.sound.stopSound();
+    });
+
+    document.querySelector('a-scene').addEventListener('doubleclick', function() {
+        // Refresh stuff would go here!
+        console.log("scene doubleclicked");
+        var entity = document.querySelector('[sound]');
+        entity.components.sound.stopSound();
         //entity.components.sound.stopSound();
     });
 
