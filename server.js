@@ -2,8 +2,17 @@ const express = require('express')
 var bodyParser = require('body-parser')
 const fs = require('fs');
 const https = require('https');
-const { MongoClient } = require('mongodb');
+//Replace Mongo with simple json DB https://www.npmjs.com/package/simple-json-db
+//Comment Mongo code
+const JSONdb = require('simple-json-db');
+
+const { MongoClient } = require('mongodb'); //use https://github.com/jclo/picodb
 const crypto = require('crypto');
+const puppeteer = require('puppeteer'); 
+//https://www.digitalocean.com/community/tutorials/how-to-scrape-a-website-using-node-js-and-puppeteer
+const browserObject = require('./browser');
+const scraperController = require('./pageController');
+
 
 const app = express()
 app.use(bodyParser.urlencoded());
@@ -22,11 +31,36 @@ const url = 'mongodb://'  +  require("./secret.json").mongo_db_ip +':27017';
 const client = new MongoClient(url);
 const dbName = 'metaverse_profile';
 
-
+getLinksFromLinkTtree();
 
 app.get('/getuuid', async (req, res, next) => {
   res.json({"uuid": crypto.randomUUID()});
 })
+
+app.post('/savelinksfromlinktree', async (req, res, next) => {
+  //First, get links from linktree
+
+  console.log("Starting to savelinksfromlinktree");
+  //Check code from Mongo
+  await client.connect();
+  console.log('Connected successfully to mongo server');
+  const db = client.db(dbName);
+  try{
+      const defaultContentsCollection = db.collection('defaultcontents');
+      const query = { defaultcontents_uuid: req.body.defaultcontents_uuid };
+      const update = { $set: { defaultcontents_uuid: req.body.defaultcontents_uuid , defaultContents: req.body.defaultContents, updatedAt: {type:Date, default:Date.now() }}};
+      const options = { upsert: true };
+      const upsertResult = await defaultContentsCollection.updateOne(query, update, options);
+      console.log('upserted documents =>', upsertResult);
+      res.json({"message": "success"});        
+  }catch(e){
+      console.log(e);
+      res.json({"message":"failure"})
+  }finally{
+      client.close();
+  }
+})
+
 
 app.post('/savesceneassets', async (req, res, next) => {
   console.log("Starting to savesceneassets");
@@ -258,3 +292,8 @@ var server = https.createServer(options, app);
 server.listen(port, () => {
     console.log("server starting on port : " + port)
 });
+
+function getLinksFromLinkTtree(linkTreeURL){
+  let browserInstance = browserObject.startBrowser();
+  scraperController(browserInstance)
+}

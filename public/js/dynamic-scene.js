@@ -206,7 +206,7 @@ $( document ).ready(async function() {
                 ' cursor="rayOrigin: mouse"' +
                 ' camera-position' +
                 ' environment' +
-                //' info-message="htmlSrc: #messageText">' +
+                ' info-message="htmlSrc: #messageText">' +
                 '</a-scene>'
             );
 
