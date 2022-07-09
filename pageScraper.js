@@ -1,8 +1,9 @@
 const scraperObject = {
     //url: 'https://linktr.ee/draplin',
-	url: 'https://linktr.ee/katyperry',
-    async scraper(browser){
+	//url: 'https://linktr.ee/katyperry',
+    async scraper(browser, url){
         try{
+            this.url = url;
             let page = await browser.newPage();
             console.log(`Navigating to ${this.url}...`);
             // Navigate to the selected page
@@ -15,9 +16,16 @@ const scraperObject = {
                 //links = links.filter(link => link.querySelector('.instock.availability > i'))
                 // Extract the links from the data
                 links = links.map(el => el.querySelector('a').href)
+                //console.log("In scraper")
+                //console.log(links);
+                
                 return links;
             });
-            console.log(urls);
+            //console.log("In scraper2")
+            //console.log(urls);
+			return urls;
+			//Get main image of each url
+			
         }catch(e){
             console.log(e);
         }

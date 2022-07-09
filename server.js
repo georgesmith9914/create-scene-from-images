@@ -5,13 +5,22 @@ const https = require('https');
 //Replace Mongo with simple json DB https://www.npmjs.com/package/simple-json-db
 //Comment Mongo code
 const JSONdb = require('simple-json-db');
+const dbDynamic = new JSONdb('dynamic-storage.json');
+const dbStatic = new JSONdb('static-storage.json');
 
 const { MongoClient } = require('mongodb'); //use https://github.com/jclo/picodb
 const crypto = require('crypto');
 const puppeteer = require('puppeteer'); 
+const download = require('image-downloader');
+var os = require('os');
+
 //https://www.digitalocean.com/community/tutorials/how-to-scrape-a-website-using-node-js-and-puppeteer
 const browserObject = require('./browser');
 const scraperController = require('./pageController');
+//import { getLinkPreview, getPreviewFromContent } from "link-preview-js";
+const ogs = require('open-graph-scraper');
+//const ogOptions = { url: 'http://ogp.me/' };
+var data = require("./data/linktree-pages/linktree-pages.json");
 
 
 const app = express()
@@ -31,7 +40,12 @@ const url = 'mongodb://'  +  require("./secret.json").mongo_db_ip +':27017';
 const client = new MongoClient(url);
 const dbName = 'metaverse_profile';
 
-getLinksFromLinkTtree();
+var reloadURLs = true;
+
+if(reloadURLs){
+  getLinksFromLinkTtree();
+}
+
 
 app.get('/getuuid', async (req, res, next) => {
   res.json({"uuid": crypto.randomUUID()});
@@ -197,16 +211,20 @@ app.post('/saveassets', async (req, res, next) => {
 app.get('/defaultcontents', async (req, res, next) => {
   console.log("Starting to getdefaultcontents");
   //Check code from Mongo
-  await client.connect();
-  console.log('Connected successfully to mongo server');
-  const db = client.db(dbName);
-  try{
-    const defaultContentsCollection = db.collection('defaultcontents');
-    const query = { defaultcontents_uuid: "922b8ef1-a69d-4eef-85ad-a3742b3500fe" };
-    result = await defaultContentsCollection.find(query).toArray();
-    console.log(result[0].defaultContents);
+  //await client.connect();
 
-    res.json({"defaultContents": result[0].defaultContents});        
+  console.log('Connected successfully to local db');
+  //const db = client.db(dbName);
+  try{
+    //const defaultContentsCollection = db.collection('defaultcontents');
+    defaultContents = dbStatic.get("defaultContents");
+    //const query = { defaultcontents_uuid: "922b8ef1-a69d-4eef-85ad-a3742b3500fe" };
+    //result = await defaultContentsCollection.find(query).toArray();
+    //console.log(result[0].defaultContents);
+    console.log(defaultContents)
+
+    //res.json({"defaultContents": result[0].defaultContents});        
+    res.json({"defaultcontents": defaultContents});  
   }catch(e){
       console.log(e);
       res.json({"message":"failure"})
@@ -218,16 +236,20 @@ app.get('/defaultcontents', async (req, res, next) => {
 app.get('/environmentcontents', async (req, res, next) => {
   console.log("Starting to environmentcontents");
   //Check code from Mongo
-  await client.connect();
-  console.log('Connected successfully to mongo server');
-  const db = client.db(dbName);
-  try{
-    const environmentContentsCollection = db.collection('environmentcontents');
-    const query = { scene_uuid: req.query.scene_uuid };
-    result = await environmentContentsCollection.find(query).toArray();
-    console.log(result[0].environmentContents);
+  //await client.connect();
 
-    res.json({"environmentContents": result[0].environmentContents});        
+  console.log('Connected successfully to local db');
+  //const db = client.db(dbName);
+  try{
+    //const defaultContentsCollection = db.collection('defaultcontents');
+    default_environmentContents = dbStatic.get("default_environmentContents");
+    //const query = { defaultcontents_uuid: "922b8ef1-a69d-4eef-85ad-a3742b3500fe" };
+    //result = await defaultContentsCollection.find(query).toArray();
+    //console.log(result[0].defaultContents);
+    console.log(default_environmentContents)
+
+    //res.json({"defaultContents": result[0].defaultContents});        
+    res.json({"environmentcontents": default_environmentContents});  
   }catch(e){
       console.log(e);
       res.json({"message":"failure"})
@@ -239,16 +261,20 @@ app.get('/environmentcontents', async (req, res, next) => {
 app.get('/scenecontents', async (req, res, next) => {
   console.log("Starting to scenecontents");
   //Check code from Mongo
-  await client.connect();
-  console.log('Connected successfully to mongo server');
-  const db = client.db(dbName);
-  try{
-    const sceneContentsCollection = db.collection('scenecontents');
-    const query = { scene_uuid: req.query.scene_uuid };
-    result = await sceneContentsCollection.find(query).toArray();
-    console.log(result[0].sceneContents);
+  //await client.connect();
 
-    res.json({"sceneContents": result[0].sceneContents});        
+  console.log('Connected successfully to local db');
+  //const db = client.db(dbName);
+  try{
+    //const defaultContentsCollection = db.collection('defaultcontents');
+    scenecontents = dbDynamic.get("sceneContents");
+    //const query = { defaultcontents_uuid: "922b8ef1-a69d-4eef-85ad-a3742b3500fe" };
+    //result = await defaultContentsCollection.find(query).toArray();
+    //console.log(result[0].defaultContents);
+    console.log(scenecontents)
+
+    //res.json({"defaultContents": result[0].defaultContents});        
+    res.json({"scenecontents": scenecontents});  
   }catch(e){
       console.log(e);
       res.json({"message":"failure"})
@@ -260,16 +286,20 @@ app.get('/scenecontents', async (req, res, next) => {
 app.get('/assets', async (req, res, next) => {
   console.log("Starting to assets");
   //Check code from Mongo
-  await client.connect();
-  console.log('Connected successfully to mongo server');
-  const db = client.db(dbName);
-  try{
-    const assetsCollection = db.collection('assets');
-    const query = { scene_uuid: req.query.scene_uuid };
-    result = await assetsCollection.find(query).toArray();
-    console.log(result[0].assets);
+  //await client.connect();
 
-    res.json({"assets": result[0].assets});        
+  console.log('Connected successfully to local db');
+  //const db = client.db(dbName);
+  try{
+    //const defaultContentsCollection = db.collection('defaultcontents');
+    assets = dbDynamic.get("assets");
+    //const query = { defaultcontents_uuid: "922b8ef1-a69d-4eef-85ad-a3742b3500fe" };
+    //result = await defaultContentsCollection.find(query).toArray();
+    //console.log(result[0].defaultContents);
+    console.log(assets)
+
+    //res.json({"defaultContents": result[0].defaultContents});        
+    res.json({"assets": assets});  
   }catch(e){
       console.log(e);
       res.json({"message":"failure"})
@@ -293,7 +323,102 @@ server.listen(port, () => {
     console.log("server starting on port : " + port)
 });
 
-function getLinksFromLinkTtree(linkTreeURL){
+async function getLinksFromLinkTtree(linkTreeURL){
   let browserInstance = browserObject.startBrowser();
-  scraperController(browserInstance)
+  var sourceUrl = data.pages[0].link;
+  var urls = await scraperController(browserInstance, sourceUrl);
+  console.log("getLinksFromLinkTtree");
+  var finalResults = new Array();
+  var assets = new Array();
+  assets.push({
+      "id": "ambient_music",
+      "type": "audio",
+      "src": "./audio/summer-dance-time-10538.mp3",
+      "crossOrigin": ""
+    },
+    {
+      "id": "messageText",
+      "type": "a-asset-item",
+      "src": "message.html",
+      "crossOrigin": ""
+    },
+    {
+      "id": "skyTexture",
+      "type": "img",
+      "src": "https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg",
+      "crossOrigin": ""
+    },
+    {
+      "id": "groundTexture",
+      "type": "img",
+      "src": "https://cdn.aframe.io/a-painter/images/floor.jpg",
+      "crossOrigin": ""
+  })
+  var contents = new Array();
+  //console.log(urls);
+  for (var i=0; i < urls.length; i++){
+    //console.log(urls[i])
+    const ogOptions = { url: urls[i] };
+    await ogs(ogOptions, (error, results, response) => {
+      //console.log('error:', error); // This returns true or false. True if there was an error. The error itself is inside the results object.
+      //console.log('results:', results); // This contains all of the Open Graph results
+      var resultToSave = {}
+      if(results.ogImage){
+        var resultToSave = {
+          ogTitle: results.ogTitle,
+          ogUrl: results.ogUrl,
+          ogImage: results.ogImage,
+          ogType: results.ogType
+        }
+        finalResults.push(resultToSave)
+        //Save assets
+        var options = {
+          url: results.ogImage.url,
+          dest: '../../public/img',               // will be saved to /path/to/dest/image.jpg
+        };
+        download.image(options)
+        .then(({ filename }) => {
+          console.log('Saved to', filename); // saved to /path/to/dest/image.jpg
+
+          
+          if(os.platform() === 'win32'){
+            var onlyFileName = filename.split("\\").pop();
+            console.log(onlyFileName)
+          }else{
+            var onlyFileName = filename.split("/").pop();
+            console.log(onlyFileName)
+          }
+
+          assets.push(
+            {
+              "id": filename,
+              "type": "img",
+              "src": "img/" + onlyFileName,
+              "crossOrigin": "",
+              "width": results.ogImage.width,
+              "height": results.ogImage.height
+            }
+          )   
+ 
+        })
+        .catch((err) => console.error(err));
+
+        if(i < 5){
+          //Save Contents
+        }
+      }
+      //console.log(resultToSave);
+      //db.set(sourceUrl, resultToSave);
+
+      //console.log(finalResults);
+      //console.log('response:', response); // This contains the HTML of page
+    });
+  }
+  console.log(finalResults);
+  //Save link extracts
+  dbDynamic.set(sourceUrl, finalResults);
+  //Save assets
+  dbDynamic.set("assets", assets);
+
+  dbDynamic.sync();
 }

@@ -10,13 +10,13 @@ $( document ).ready(async function() {
 
     var scene_uuid = queries.scene_uuid;
 
-    var defaultContents = (await $.ajax({url: "defaultcontents", success: function(result){}}).promise()).defaultContents;
+    var defaultContents = (await $.ajax({url: "defaultcontents", success: function(result){}}).promise()).defaultcontents;
     console.log(defaultContents);
 
-    var environmentContents = (await $.ajax({url: "environmentContents?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).environmentContents;
+    var environmentContents = (await $.ajax({url: "environmentcontents?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).environmentcontents;
     console.log(environmentContents);
 
-    var sceneContents = (await $.ajax({url: "sceneContents?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).sceneContents;
+    var sceneContents = (await $.ajax({url: "scenecontents?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).scenecontents;
     console.log(sceneContents);
 
     var assets = (await $.ajax({url: "assets?scene_uuid=" + scene_uuid, success: function(result){}}).promise()).assets;

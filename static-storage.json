@@ -1,0 +1,29 @@
+{
+    "defaultContents": [
+        {
+          "type": "cursor",
+          "template": "default",
+          "position": "0 4 -1.0"
+        },
+        {
+          "type": "leftHandControl",
+          "template": "default"
+        },
+        {
+          "type": "rightHandControl",
+          "template": "default"
+        }
+    ],
+    "default_environmentContents": [
+        {
+          "type": "scene_background",
+          "template": "sechelt",
+          "material_content_key": "#skyTexture"
+        },
+        {
+          "type": "scene_ground",
+          "template": "floor",
+          "material_content_key": "#groundTexture"
+        }
+      ]
+}
