@@ -330,6 +330,7 @@ async function getLinksFromLinkTtree(linkTreeURL){
   console.log("getLinksFromLinkTtree");
   var finalResults = new Array();
   var assets = new Array();
+
   assets.push({
       "id": "ambient_music",
       "type": "audio",
@@ -356,9 +357,12 @@ async function getLinksFromLinkTtree(linkTreeURL){
   })
   var contents = new Array();
   //console.log(urls);
+  //var counter = 0;
   for (var i=0; i < urls.length; i++){
     //console.log(urls[i])
     const ogOptions = { url: urls[i] };
+    var onlyFileName;
+   
     await ogs(ogOptions, (error, results, response) => {
       //console.log('error:', error); // This returns true or false. True if there was an error. The error itself is inside the results object.
       //console.log('results:', results); // This contains all of the Open Graph results
@@ -382,10 +386,10 @@ async function getLinksFromLinkTtree(linkTreeURL){
 
           
           if(os.platform() === 'win32'){
-            var onlyFileName = filename.split("\\").pop();
+            onlyFileName = filename.split("\\").pop();
             console.log(onlyFileName)
           }else{
-            var onlyFileName = filename.split("/").pop();
+            onlyFileName = filename.split("/").pop();
             console.log(onlyFileName)
           }
 
@@ -403,9 +407,9 @@ async function getLinksFromLinkTtree(linkTreeURL){
         })
         .catch((err) => console.error(err));
 
-        if(i < 5){
-          //Save Contents
-        }
+        //console.log("counter" + counter);
+
+        
       }
       //console.log(resultToSave);
       //db.set(sourceUrl, resultToSave);
@@ -419,6 +423,96 @@ async function getLinksFromLinkTtree(linkTreeURL){
   dbDynamic.set(sourceUrl, finalResults);
   //Save assets
   dbDynamic.set("assets", assets);
-
   dbDynamic.sync();
+  //Save sceneContents
+  await createSceneContents(assets);
+
+}
+
+async function createSceneContents(assets){
+  var sceneContents = new Array();
+
+  for(var j=4; j < 9; j++){
+    if(j==4){
+      var sceneContent = {
+        "type": "headline",
+        "template": "default",
+        "material_content_type": "img",
+        "material_content_src": assets[j].src,
+        "material_content_key": assets[j].src,
+        "link": "https://tr.lnk.to/WhereWeStarted_trackKP",
+        "id": "elmo",
+        "sound_src": "audio/summer-dance-time-10538.mp3",
+        "position": "0 2 -1.0",
+        "rotation": "30 30 10",
+        "scale": "1.5 1.5 1.5"
+      }
+      sceneContents.push(sceneContent);
+    }else if(j == 5){
+      var sceneContent =  {
+        "type": "link",
+        "template": "default",
+        "material_content_type": "img",
+        "material_content_src": assets[j].src,
+        "material_content_key": assets[j].src,
+        "link": "https://tr.lnk.to/WhereWeStarted_trackKP",
+        "text": "Gift a tree",
+        "id": "",
+        "position": "2.5 2 -1.0",
+        "rotation": "",
+        "scale": ""
+      }
+      sceneContents.push(sceneContent);
+    }else if(j == 6){
+      var sceneContent =  {
+        "type": "video",
+        "template": "default",
+        "material_content_type": "img",
+        "material_content_src": assets[j].src,
+        "material_content_key": assets[j].src,
+        "link": "https://ffm.to/mjw_showsometeeth.hjg",
+        "id": "",
+        "position": "4 1 -1.0",
+        "rotation": "0 60 0",
+        "scale": "1 1 1"
+      }
+      sceneContents.push(sceneContent);
+    }else if(j == 7){
+      var sceneContent =    {
+        "type": "video",
+        "template": "default",
+        "material_content_type": "img",
+        "material_content_src": assets[j].src,
+        "material_content_key": assets[j].src,
+        "link": "https://www.youtube.com/watch?v=led8kSxI4DA",
+        "id": "",
+        "position": "24.06958 0.76223 9.29935",
+        "rotation": "0 59.99999999999999 0",
+        "scale": "1.5 1.5 1.5"
+      }
+      sceneContents.push(sceneContent);
+    }else if(j == 8){
+      var sceneContent =  {
+        "type": "video",
+        "template": "default",
+        "material_content_type": "img",
+        "material_content_src": assets[j].src,
+        "material_content_key": assets[j].src,
+        "link": "https://www.youtube.com/watch?v=led8kSxI4DA",
+        "id": "",
+        "position": "-16.36234 2.56164 -19.8249",
+        "rotation": "",
+        "scale": "1.5 1.5 1.5"
+      }
+      sceneContents.push(sceneContent);
+    }
+   
+
+   
+
+  }
+
+  //console.log(sceneContents);  
+  dbDynamic.set("sceneContents", sceneContents);
+
 }

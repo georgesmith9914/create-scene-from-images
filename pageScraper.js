@@ -15,7 +15,11 @@ const scraperObject = {
                 // Make sure the book to be scraped is in stock
                 //links = links.filter(link => link.querySelector('.instock.availability > i'))
                 // Extract the links from the data
+               try{
                 links = links.map(el => el.querySelector('a').href)
+               }catch(e){
+                console.log(e);
+               }
                 //console.log("In scraper")
                 //console.log(links);
                 
