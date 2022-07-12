@@ -20,7 +20,7 @@ const scraperController = require('./pageController');
 //import { getLinkPreview, getPreviewFromContent } from "link-preview-js";
 const ogs = require('open-graph-scraper');
 //const ogOptions = { url: 'http://ogp.me/' };
-var data = require("./data/linktree-pages/linktree-pages.json");
+var data = require("./data/user-contents/user-contents.json");
 
 
 const app = express()
@@ -43,7 +43,8 @@ const dbName = 'metaverse_profile';
 var reloadURLs = true;
 
 if(reloadURLs){
-  getLinksFromLinkTtree();
+  //getLinksFromLinkTtree();
+  createAssetsCollection();
 }
 
 
@@ -323,6 +324,50 @@ server.listen(port, () => {
     console.log("server starting on port : " + port)
 });
 
+function createAssetsCollection(){
+  var rawContents = data.contents;
+  var assets = new Array();
+      assets.push({
+        "id": "ambient_music",
+        "type": "audio",
+        "src": "./audio/summer-dance-time-10538.mp3",
+        "crossOrigin": ""
+      },
+      {
+        "id": "messageText",
+        "type": "a-asset-item",
+        "src": "message.html",
+        "crossOrigin": ""
+      },
+      {
+        "id": "skyTexture",
+        "type": "img",
+        "src": "https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg",
+        "crossOrigin": ""
+      },
+      {
+        "id": "groundTexture",
+        "type": "img",
+        "src": "https://cdn.aframe.io/a-painter/images/floor.jpg",
+        "crossOrigin": ""
+    })
+  for (var i=0; i < rawContents.length; i++){
+    assets.push(
+      {
+        "id": rawContents[i].imageSource,
+        "type": "img",
+        "src": rawContents[i].imageSource
+        //"crossOrigin": "",
+        //"width": results.ogImage.width,
+        //"height": results.ogImage.height
+      }
+    )   
+  }
+
+  dbDynamic.set("assets", assets);
+  createSceneContents(assets);
+}
+
 async function getLinksFromLinkTtree(linkTreeURL){
   let browserInstance = browserObject.startBrowser();
   var sourceUrl = data.pages[0].link;
@@ -429,18 +474,19 @@ async function getLinksFromLinkTtree(linkTreeURL){
 
 }
 
-async function createSceneContents(assets){
+function createSceneContents(){
+  var rawContents = data.contents;
   var sceneContents = new Array();
 
-  for(var j=4; j < 9; j++){
-    if(j==4){
+  for(var j=0; j < rawContents.length; j++){
+    if(j==0){
       var sceneContent = {
         "type": "headline",
         "template": "default",
         "material_content_type": "img",
-        "material_content_src": assets[j].src,
-        "material_content_key": assets[j].src,
-        "link": "https://tr.lnk.to/WhereWeStarted_trackKP",
+        "material_content_src": rawContents[j].imageSource,
+        "material_content_key": rawContents[j].imageSource,
+        "link": rawContents[j].link,
         "id": "elmo",
         "sound_src": "audio/summer-dance-time-10538.mp3",
         "position": "0 2 -1.0",
@@ -448,57 +494,57 @@ async function createSceneContents(assets){
         "scale": "1.5 1.5 1.5"
       }
       sceneContents.push(sceneContent);
-    }else if(j == 5){
+    }else if(j == 1){
       var sceneContent =  {
         "type": "link",
         "template": "default",
         "material_content_type": "img",
-        "material_content_src": assets[j].src,
-        "material_content_key": assets[j].src,
-        "link": "https://tr.lnk.to/WhereWeStarted_trackKP",
-        "text": "Gift a tree",
+        "material_content_src": rawContents[j].imageSource,
+        "material_content_key": rawContents[j].imageSource,
+        "link": rawContents[j].link,
+        "text": rawContents[j].linkText,
         "id": "",
         "position": "2.5 2 -1.0",
         "rotation": "",
         "scale": ""
       }
       sceneContents.push(sceneContent);
-    }else if(j == 6){
+    }else if(j == 2){
       var sceneContent =  {
         "type": "video",
         "template": "default",
         "material_content_type": "img",
-        "material_content_src": assets[j].src,
-        "material_content_key": assets[j].src,
-        "link": "https://ffm.to/mjw_showsometeeth.hjg",
+        "material_content_src": rawContents[j].imageSource,
+        "material_content_key": rawContents[j].imageSource,
+        "link": rawContents[j].link,
         "id": "",
         "position": "4 1 -1.0",
         "rotation": "0 60 0",
         "scale": "1 1 1"
       }
       sceneContents.push(sceneContent);
-    }else if(j == 7){
+    }else if(j == 3){
       var sceneContent =    {
         "type": "video",
         "template": "default",
         "material_content_type": "img",
-        "material_content_src": assets[j].src,
-        "material_content_key": assets[j].src,
-        "link": "https://www.youtube.com/watch?v=led8kSxI4DA",
+        "material_content_src": rawContents[j].imageSource,
+        "material_content_key": rawContents[j].imageSource,
+        "link": rawContents[j].link,
         "id": "",
         "position": "24.06958 0.76223 9.29935",
         "rotation": "0 59.99999999999999 0",
         "scale": "1.5 1.5 1.5"
       }
       sceneContents.push(sceneContent);
-    }else if(j == 8){
+    }else if(j == 4){
       var sceneContent =  {
         "type": "video",
         "template": "default",
         "material_content_type": "img",
-        "material_content_src": assets[j].src,
-        "material_content_key": assets[j].src,
-        "link": "https://www.youtube.com/watch?v=led8kSxI4DA",
+        "material_content_src": rawContents[j].imageSource,
+        "material_content_key": rawContents[j].imageSource,
+        "link": rawContents[j].link,
         "id": "",
         "position": "-16.36234 2.56164 -19.8249",
         "rotation": "",

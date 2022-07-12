@@ -1,0 +1,117 @@
+{
+    "assets": [
+        {
+            "id": "ambient_music",
+            "type": "audio",
+            "src": "./audio/summer-dance-time-10538.mp3",
+            "crossOrigin": ""
+        },
+        {
+            "id": "messageText",
+            "type": "a-asset-item",
+            "src": "message.html",
+            "crossOrigin": ""
+        },
+        {
+            "id": "skyTexture",
+            "type": "img",
+            "src": "https://cdn.aframe.io/360-image-gallery-boilerplate/img/sechelt.jpg",
+            "crossOrigin": ""
+        },
+        {
+            "id": "groundTexture",
+            "type": "img",
+            "src": "https://cdn.aframe.io/a-painter/images/floor.jpg",
+            "crossOrigin": ""
+        },
+        {
+            "id": "img/stevosdisposable-SVuhugMvK6Y-unsplash.jpg",
+            "type": "img",
+            "src": "img/stevosdisposable-SVuhugMvK6Y-unsplash.jpg"
+        },
+        {
+            "id": "img/bryony-elena-GxKQ951rK58-unsplash.jpg",
+            "type": "img",
+            "src": "img/bryony-elena-GxKQ951rK58-unsplash.jpg"
+        },
+        {
+            "id": "img/maddle-ecd8EnxB360-unsplash.jpg",
+            "type": "img",
+            "src": "img/maddle-ecd8EnxB360-unsplash.jpg"
+        },
+        {
+            "id": "img/keisha-ostergaard-3wA6XU8iFqo-unsplash.jpg",
+            "type": "img",
+            "src": "img/keisha-ostergaard-3wA6XU8iFqo-unsplash.jpg"
+        },
+        {
+            "id": "img/bailey-burton-9Opo40vWNaY-unsplash.jpg",
+            "type": "img",
+            "src": "img/bailey-burton-9Opo40vWNaY-unsplash.jpg"
+        }
+    ],
+    "sceneContents": [
+        {
+            "type": "headline",
+            "template": "default",
+            "material_content_type": "img",
+            "material_content_src": "img/stevosdisposable-SVuhugMvK6Y-unsplash.jpg",
+            "material_content_key": "img/stevosdisposable-SVuhugMvK6Y-unsplash.jpg",
+            "link": "https://www.linkedin.com/in/sanjeevkumarprofile",
+            "id": "elmo",
+            "sound_src": "audio/summer-dance-time-10538.mp3",
+            "position": "0 2 -1.0",
+            "rotation": "30 30 10",
+            "scale": "1.5 1.5 1.5"
+        },
+        {
+            "type": "link",
+            "template": "default",
+            "material_content_type": "img",
+            "material_content_src": "img/bryony-elena-GxKQ951rK58-unsplash.jpg",
+            "material_content_key": "img/bryony-elena-GxKQ951rK58-unsplash.jpg",
+            "link": "https://tr.lnk.to/WhereWeStarted_trackKP",
+            "text": "My Blog",
+            "id": "",
+            "position": "2.5 2 -1.0",
+            "rotation": "",
+            "scale": ""
+        },
+        {
+            "type": "video",
+            "template": "default",
+            "material_content_type": "img",
+            "material_content_src": "img/maddle-ecd8EnxB360-unsplash.jpg",
+            "material_content_key": "img/maddle-ecd8EnxB360-unsplash.jpg",
+            "link": "https://ffm.to/mjw_showsometeeth.hjg",
+            "id": "",
+            "position": "4 1 -1.0",
+            "rotation": "0 60 0",
+            "scale": "1 1 1"
+        },
+        {
+            "type": "video",
+            "template": "default",
+            "material_content_type": "img",
+            "material_content_src": "img/keisha-ostergaard-3wA6XU8iFqo-unsplash.jpg",
+            "material_content_key": "img/keisha-ostergaard-3wA6XU8iFqo-unsplash.jpg",
+            "link": "https://www.youtube.com/watch?v=led8kSxI4DA",
+            "id": "",
+            "position": "24.06958 0.76223 9.29935",
+            "rotation": "0 59.99999999999999 0",
+            "scale": "1.5 1.5 1.5"
+        },
+        {
+            "type": "video",
+            "template": "default",
+            "material_content_type": "img",
+            "material_content_src": "img/bailey-burton-9Opo40vWNaY-unsplash.jpg",
+            "material_content_key": "img/bailey-burton-9Opo40vWNaY-unsplash.jpg",
+            "link": "https://www.youtube.com/watch?v=led8kSxI4DA",
+            "id": "",
+            "position": "-16.36234 2.56164 -19.8249",
+            "rotation": "",
+            "scale": "1.5 1.5 1.5"
+        }
+    ]
+}
