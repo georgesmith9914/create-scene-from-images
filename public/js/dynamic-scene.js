@@ -282,6 +282,10 @@ $( document ).ready(async function() {
                     ' position="' + sceneContents[sceneAssetCounter].position +'"' +
                     ' rotation="' + sceneContents[sceneAssetCounter].rotation +'"' +
                     ' scale="' + sceneContents[sceneAssetCounter].scale +'"' +'">' +
+                    //'       <a-entity tooltip="text: Hello world!\n(Hey I also support multiline); width: 0.5; height: 0.5; end: -2 -1 -3; src:tooltip.png"' +
+                    //'           position="' + sceneContents[sceneAssetCounter].position +'"' +
+                    //'           rotation="0 -45 0">' +
+                    //'         </a-entity>' +
                     '</' + "a-entity" +'>' 
             )  
         }else if(sceneContents[sceneAssetCounter].type =="link" && 
