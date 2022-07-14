@@ -2,6 +2,7 @@ const express = require('express')
 var bodyParser = require('body-parser')
 const fs = require('fs');
 const https = require('https');
+const http = require('http');
 //Replace Mongo with simple json DB https://www.npmjs.com/package/simple-json-db
 //Comment Mongo code
 const JSONdb = require('simple-json-db');
@@ -26,18 +27,21 @@ var data = require("./data/user-contents/user-contents.json");
 const app = express()
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-const port = 443;
+//const port = 443;
+const port = 3000;
 
-const options = {
+/*const options = {
     key: fs.readFileSync('key.pem'),
     cert: fs.readFileSync('cert.pem')
-  };
+  }; */
 
 app.use(express.static('public'));
 
 //const url = 'mongodb://' + require("./secret.json").mongo_db_user + ":" + require("./secret.json").mongo_db_pwd + "@" +  require("./secret.json").mongo_db_ip +':27017';
-const url = 'mongodb://'  +  require("./secret.json").mongo_db_ip +':27017';
-const client = new MongoClient(url);
+//const url = 'mongodb://'  +  require("./secret.json").mongo_db_ip +':27017';
+const url = "";
+//const client = new MongoClient(url);
+const client = {}
 const dbName = 'metaverse_profile';
 
 var reloadURLs = true;
@@ -230,7 +234,7 @@ app.get('/defaultcontents', async (req, res, next) => {
       console.log(e);
       res.json({"message":"failure"})
   }finally{
-      client.close();
+      //client.close();
   }
 })
 
@@ -255,7 +259,7 @@ app.get('/environmentcontents', async (req, res, next) => {
       console.log(e);
       res.json({"message":"failure"})
   }finally{
-      client.close();
+      //client.close();
   }
 })
 
@@ -280,7 +284,7 @@ app.get('/scenecontents', async (req, res, next) => {
       console.log(e);
       res.json({"message":"failure"})
   }finally{
-      client.close();
+      //client.close();
   }
 })
 
@@ -305,7 +309,7 @@ app.get('/assets', async (req, res, next) => {
       console.log(e);
       res.json({"message":"failure"})
   }finally{
-      client.close();
+      //client.close();
   }
 })
 
@@ -318,7 +322,8 @@ app.get('/assets', async (req, res, next) => {
 //Derive assets for asset management system based on environments, contents and templates used
 //save assets in DB
 
-var server = https.createServer(options, app);
+//var server = https.createServer(options, app);
+var server = http.createServer({}, app);
 
 server.listen(port, () => {
     console.log("server starting on port : " + port)
