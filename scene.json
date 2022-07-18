@@ -1,0 +1,18 @@
+{
+  "display": {
+    "title": "JoinMyVerse Scene",
+    "description": "My new JoinMyVerse project",
+    "navmapThumbnail": "img/bailey-burton-9Opo40vWNaY-unsplash.jpg",
+    "favicon": "favicon_asset"
+  },
+  "owner": "",
+  "contact": {
+    "name": "author-name",
+    "email": ""
+  },
+  "main": "server.js",
+  "tags": [],
+  "scene": {
+    "parcels": ["855"]
+  }
+}
