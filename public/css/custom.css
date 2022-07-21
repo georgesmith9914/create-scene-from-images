@@ -1,0 +1,33 @@
+.btn-no-outline {
+    border-color:#343a40 !important;
+}
+
+.fixed-width{
+    /*width: 13% !important;*/
+} 
+
+.legend-sold {
+    height: 25px;
+    width: 45px;
+    background-color: #555;
+    color: white;
+    text-align: center;
+}
+
+.empty {
+    height: 25px;
+    width: 45px;
+    color: white;
+    text-align: center;
+}
+
+.legend-unsold {
+    height: 25px;
+    width: 45px;
+    background-color: white;
+    border-style: solid;
+    border-width: thin;
+    border-color: black;
+    color: black;
+    text-align: center;
+}

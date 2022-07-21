@@ -313,6 +313,13 @@ app.get('/assets', async (req, res, next) => {
   }
 })
 
+
+app.post('/publishscene', async (req, res, next) => {
+  console.log("Starting to publishscene");
+  //pick changed files using git
+  
+})
+
 //Save environments in DB
 //Save the Link-In-Bio links and types in DB
 //Extract primary images from the links and associate each image to a link
