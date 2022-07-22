@@ -99,7 +99,17 @@
             
         }
         //Connect to expressjs route
-
+        var data = {}
+        $.ajax( {
+          url: '/publishscene',
+          type: 'POST',
+          data: JSON.stringify(data),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: async function(result){
+            console.log(result);
+          }
+        })
         
     }
 

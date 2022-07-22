@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const express = require('express')
 var bodyParser = require('body-parser')
 const fs = require('fs');
@@ -20,13 +22,22 @@ const browserObject = require('./browser');
 const scraperController = require('./pageController');
 //import { getLinkPreview, getPreviewFromContent } from "link-preview-js";
 const ogs = require('open-graph-scraper');
+const gitChangedFiles = require('git-changed-files');
+const axios = require('axios');
+const FormData = require('form-data');
+const archiver = require('archiver');
+const ShortUniqueId = require("short-unique-id");
+const uid = new ShortUniqueId({ length: 10 });
+
+
 //const ogOptions = { url: 'http://ogp.me/' };
 var data = require("./data/user-contents/user-contents.json");
 
 
 const app = express()
-app.use(bodyParser.urlencoded());
+app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json());
+app.use(express.json());
 //const port = 443;
 const port = 3000;
 
@@ -315,10 +326,78 @@ app.get('/assets', async (req, res, next) => {
 
 
 app.post('/publishscene', async (req, res, next) => {
+  var projectID = uid();
   console.log("Starting to publishscene");
-  //pick changed files using git
-  
+    
+    (async() => {
+      let unCommittedGitFiles = await gitChangedFiles({baseBranch: "main"});
+      console.log(unCommittedGitFiles.unCommittedFiles);
+      axios.defaults.headers.common = {
+        "Content-Type": "application/json"
+      }
+
+       await  axios.post('https://localhost/initapp', {
+        "projectID": projectID,
+        "repozipURL": "https://github.com/georgesmith9914/create-scene-from-images/archive/refs/heads/main.zip",
+        "zipFile": "main.zip"
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(response => {
+            console.log(response.data);
+          });
+
+      //process changed files list now
+      const upload = async () => {
+        console.log("now uploading files");
+
+        try {
+        
+          const form = new FormData();
+          form.append('projectID', projectID);
+          form.append("appFolder", "create-scene-from-images-main");
+          
+          
+
+          for(var fileCount=0; fileCount < unCommittedGitFiles.unCommittedFiles.length; fileCount++){
+            //console.log(unCommittedGitFiles.unCommittedFiles[fileCount]);
+            const file = fs.createReadStream(unCommittedGitFiles.unCommittedFiles[fileCount]);
+            var fileName = unCommittedGitFiles.unCommittedFiles[fileCount].split('/').pop();
+            var filePath = unCommittedGitFiles.unCommittedFiles[fileCount].split(fileName)[0];
+            if(!filePath){
+              filePath = "./";
+            }
+            //console.log(filePath);
+            //console.log(fileName);
+            form.append(filePath, file);
+            
+          }
+          
+          const formHeaders = form.getHeaders();
+          const resp = await axios.post('https://localhost/upload', form, {
+            headers: {
+              ...formHeaders,
+            }
+          });
+        
+          if (resp.status === 200) {
+            return 'Upload complete';
+          } 
+        } catch(err) {
+          return new Error(err.message);
+        }
+      }
+      
+      upload().then(resp => console.log(resp));
+  })().catch((err) => {
+      console.log(err);
+    });
+
 })
+
+
 
 //Save environments in DB
 //Save the Link-In-Bio links and types in DB
