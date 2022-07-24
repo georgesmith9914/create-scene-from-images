@@ -9,6 +9,7 @@ $( document ).ready(async function() {
     console.log(queries);
 
     var scene_uuid = queries.scene_uuid;
+    scene_uuid = "1";
 
     var defaultContents = (await $.ajax({url: "defaultcontents", success: function(result){}}).promise()).defaultcontents;
     console.log(defaultContents);

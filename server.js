@@ -328,7 +328,8 @@ app.get('/assets', async (req, res, next) => {
 app.post('/publishscene', async (req, res, next) => {
   var projectID = uid();
   console.log("Starting to publishscene");
-    
+
+  
     (async() => {
       let unCommittedGitFiles = await gitChangedFiles({baseBranch: "main"});
       console.log(unCommittedGitFiles.unCommittedFiles);
@@ -336,31 +337,16 @@ app.post('/publishscene', async (req, res, next) => {
         "Content-Type": "application/json"
       }
 
-       await  axios.post('https://localhost/initapp', {
-        "projectID": projectID,
-        "repozipURL": "https://github.com/georgesmith9914/create-scene-from-images/archive/refs/heads/main.zip",
-        "zipFile": "main.zip"
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(response => {
-            console.log(response.data);
-          });
-
+      const form = new FormData();
+      form.append('projectID', projectID);
+      form.append("appFolder", "create-scene-from-images-main");
+      const formHeaders = form.getHeaders();
+    
       //process changed files list now
       const upload = async () => {
         console.log("now uploading files");
 
         try {
-        
-          const form = new FormData();
-          form.append('projectID', projectID);
-          form.append("appFolder", "create-scene-from-images-main");
-          
-          
-
           for(var fileCount=0; fileCount < unCommittedGitFiles.unCommittedFiles.length; fileCount++){
             //console.log(unCommittedGitFiles.unCommittedFiles[fileCount]);
             const file = fs.createReadStream(unCommittedGitFiles.unCommittedFiles[fileCount]);
@@ -375,7 +361,6 @@ app.post('/publishscene', async (req, res, next) => {
             
           }
           
-          const formHeaders = form.getHeaders();
           const resp = await axios.post('https://localhost/upload', form, {
             headers: {
               ...formHeaders,
@@ -385,12 +370,61 @@ app.post('/publishscene', async (req, res, next) => {
           if (resp.status === 200) {
             return 'Upload complete';
           } 
+
+
+
         } catch(err) {
           return new Error(err.message);
         }
       }
-      
-      upload().then(resp => console.log(resp));
+
+      //Deploy Docker container
+      const deploy = async () => {
+        try{
+          console.log("now deploying container");
+          const respDeploy = await  axios.post('https://localhost/deploy', {
+            "projectID": projectID,
+            "appFolder": "create-scene-from-images-main"
+            }, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+              .then(response => {
+                console.log("deployment complete");
+                console.log(response.data);
+              });
+
+        }catch(err) {
+          //console.log(err);
+          return new Error(err.message);
+        }
+
+      }
+
+       console.log("Now starting initapp");
+       console.log("projectID " + projectID);
+       var initResp = await  axios.post('https://localhost/initapp', {
+        "projectID": projectID,
+        "repozipURL": "https://github.com/georgesmith9914/create-scene-from-images/archive/refs/heads/main.zip",
+        "zipFile": "main.zip"
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(response => {
+            console.log("initapp complete");
+            console.log(response.data);
+            //Now upload files
+            upload().then(resp => 
+              {
+                console.log(resp);
+                deploy().then(respDeploy => console.log(respDeploy));
+              });
+
+          });
+
   })().catch((err) => {
       console.log(err);
     });
