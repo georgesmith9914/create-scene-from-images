@@ -1,15 +1,15 @@
 $( document ).ready(async function() {
-    console.log( "ready!" );
+    console.log( "document ready!" );
 
-    var queries = {};
-    $.each(document.location.search.substr(1).split('&'),function(c,q){
+    //var queries = {};
+    /*$.each(document.location.search.substr(1).split('&'),function(c,q){
         var i = q.split('=');
         queries[i[0].toString()] = i[1].toString();
     });
-    console.log(queries);
+    console.log(queries);*/
 
-    var scene_uuid = queries.scene_uuid;
-    scene_uuid = "1";
+    //var scene_uuid = queries.scene_uuid;
+    var scene_uuid = "1";
 
     var defaultContents = (await $.ajax({url: "defaultcontents", success: function(result){}}).promise()).defaultcontents;
     console.log(defaultContents);

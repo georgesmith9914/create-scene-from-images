@@ -1,4 +1,4 @@
-
+  var baseURL = "https://localhost"
   
   $(document).ready(function() {
 
@@ -108,6 +108,7 @@
           dataType: "json",
           success: async function(result){
             console.log(result);
+            $("#publishupdate").html(`Deployed mapp on <a href="${baseURL}/metaverse/${result.details.humanReadableID}/" target="_blank">URL</a>`)
           }
         })
         

@@ -368,13 +368,14 @@ app.post('/publishscene', async (req, res, next) => {
           });
         
           if (resp.status === 200) {
-            return 'Upload complete';
+            console.log('Upload complete');
           } 
 
 
 
         } catch(err) {
-          return new Error(err.message);
+          res.json({"error": err})
+          //return new Error(err.message);
         }
       }
 
@@ -391,13 +392,15 @@ app.post('/publishscene', async (req, res, next) => {
               }
             })
               .then(response => {
-                console.log("deployment complete");
+                console.log("deployment attempt finished");
                 console.log(response.data);
+                res.json({"status": "deployed", "details": response.data})
               });
 
         }catch(err) {
           //console.log(err);
-          return new Error(err.message);
+         // return new Error(err.message);
+         res.json({"error": err})
         }
 
       }
@@ -416,6 +419,7 @@ app.post('/publishscene', async (req, res, next) => {
           .then(response => {
             console.log("initapp complete");
             console.log(response.data);
+            
             //Now upload files
             upload().then(resp => 
               {
