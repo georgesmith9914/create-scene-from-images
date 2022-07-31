@@ -23,6 +23,7 @@ const scraperController = require('./pageController');
 //import { getLinkPreview, getPreviewFromContent } from "link-preview-js";
 const ogs = require('open-graph-scraper');
 const gitChangedFiles = require('git-changed-files');
+const simpleGit = require('simple-git');
 const axios = require('axios');
 const FormData = require('form-data');
 const archiver = require('archiver');
@@ -331,6 +332,8 @@ app.post('/publishscene', async (req, res, next) => {
 
   
     (async() => {
+
+
       let unCommittedGitFiles = await gitChangedFiles({baseBranch: "main"});
       console.log(unCommittedGitFiles.unCommittedFiles);
       axios.defaults.headers.common = {
