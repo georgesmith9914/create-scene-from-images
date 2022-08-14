@@ -1,5 +1,6 @@
   var baseURL = "https://localhost"
-  
+  var signature;
+
   $(document).ready(function() {
 
     var signer, network, account, parcelID;
@@ -95,11 +96,15 @@
         if(parcelID==""){
             $.notify("Please select parcel ID");
         }else{
-            var signature = await signer.signMessage("Publishing to parcel #" + parcelID);
-            
+            signature = await signer.signMessage("Publishing to parcel #" + parcelID);
+            console.log(signature);
         }
         //Connect to expressjs route
-        var data = {}
+        var data = {
+          "signature": signature,
+          "account": account,
+          "parcelID": parcelID
+        }
         $.ajax( {
           url: '/publishscene',
           type: 'POST',

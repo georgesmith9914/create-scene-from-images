@@ -388,7 +388,10 @@ app.post('/publishscene', async (req, res, next) => {
           console.log("now deploying container");
           const respDeploy = await  axios.post('https://localhost/deploy', {
             "projectID": projectID,
-            "appFolder": "create-scene-from-images-main"
+            "appFolder": "create-scene-from-images-main",
+            "signature": req.body.signature,
+            "account": req.body.account,
+            "parcelID": req.body.parcelID
             }, {
               headers: {
                 'Content-Type': 'application/json'
